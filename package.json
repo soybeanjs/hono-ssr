@@ -1,6 +1,6 @@
 {
   "name": "@soybeanjs/hono-ssr",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A Vite SSR plugin for Hono framework, providing file-based routing, client build, SSR manifest management, and multi-platform deployment adaptation.",
   "homepage": "https://github.com/soybeanjs/hono-ssr",
   "bugs": {

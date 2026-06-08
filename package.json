@@ -55,14 +55,16 @@
     "typecheck": "tsc --noEmit --skipLibCheck",
     "upkg": "soy ncu"
   },
-  "devDependencies": {
+  "dependencies": {
     "@hono/vite-build": "^1.11.1",
     "@hono/vite-dev-server": "^0.26.0",
+    "hono": "^4.12.24",
+    "tinyglobby": "^0.2.17"
+  },
+  "devDependencies": {
     "@soybeanjs/cli": "^1.7.2",
     "@soybeanjs/oxc-config": "^0.2.3",
     "@types/node": "^25.9.2",
-    "hono": "^4.12.24",
-    "tinyglobby": "^0.2.17",
     "typescript": "^6.0.3",
     "vite": "catalog:",
     "vite-plus": "catalog:",

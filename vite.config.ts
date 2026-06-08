@@ -13,6 +13,7 @@ export default defineConfig({
     platform: 'neutral',
     deps: {
       neverBundle: [
+        ...Object.keys(pkg.dependencies),
         ...Object.keys(pkg.devDependencies),
         '@hono/vite-dev-server/cloudflare',
         '@hono/vite-dev-server/bun',

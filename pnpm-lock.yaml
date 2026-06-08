@@ -18,13 +18,20 @@ overrides:
 importers:
 
   .:
-    devDependencies:
+    dependencies:
       '@hono/vite-build':
         specifier: ^1.11.1
         version: 1.11.1(hono@4.12.24)
       '@hono/vite-dev-server':
         specifier: ^0.26.0
         version: 0.26.0(hono@4.12.24)(miniflare@4.20260603.0)(wrangler@4.98.0)
+      hono:
+        specifier: ^4.12.24
+        version: 4.12.24
+      tinyglobby:
+        specifier: ^0.2.17
+        version: 0.2.17
+    devDependencies:
       '@soybeanjs/cli':
         specifier: ^1.7.2
         version: 1.7.2
@@ -34,12 +41,6 @@ importers:
       '@types/node':
         specifier: ^25.9.2
         version: 25.9.2
-      hono:
-        specifier: ^4.12.24
-        version: 4.12.24
-      tinyglobby:
-        specifier: ^0.2.17
-        version: 0.2.17
       typescript:
         specifier: ^6.0.3
         version: 6.0.3

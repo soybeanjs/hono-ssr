@@ -1,0 +1,58 @@
+{
+  "name": "@soybeanjs/hono-ssr",
+  "version": "0.0.0",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./route": {
+      "types": "./dist/route.d.ts",
+      "import": "./dist/route.js",
+      "require": "./dist/route.js"
+    },
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "import": "./dist/vite.js",
+      "require": "./dist/vite.js"
+    },
+    "./types": {
+      "types": "./dist/hono-ssr.d.ts"
+    }
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "vp pack",
+    "commit": "soy git-commit",
+    "fmt": "vp fmt",
+    "lint": "vp lint --fix",
+    "publish-pkg": "pnpm publish --access public",
+    "release": "soy release",
+    "typecheck": "tsc --noEmit --skipLibCheck",
+    "upkg": "soy ncu"
+  },
+  "devDependencies": {
+    "@hono/vite-build": "^1.11.1",
+    "@hono/vite-dev-server": "^0.26.0",
+    "@soybeanjs/cli": "^1.7.2",
+    "@soybeanjs/oxc-config": "^0.2.3",
+    "@types/node": "^25.9.2",
+    "hono": "^4.12.23",
+    "tinyglobby": "^0.2.17",
+    "typescript": "^6.0.3",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
+    "wrangler": "^4.98.0"
+  },
+  "packageManager": "pnpm@11.5.2"
+}

@@ -1,0 +1,15 @@
+shamefullyHoist: true
+catalog:
+  vite: npm:@voidzero-dev/vite-plus-core@^0.1.24
+  vitest: npm:@voidzero-dev/vite-plus-test@latest
+  vite-plus: ^0.1.24
+overrides:
+  vite: 'catalog:'
+  vitest: 'catalog:'
+  oxlint: '1.68.0'
+minimumReleaseAgeExclude:
+  - '@soybeanjs/oxc-config@0.2.3'
+allowBuilds:
+  esbuild: set this to true or false
+  sharp: set this to true or false
+  workerd: set this to true or false

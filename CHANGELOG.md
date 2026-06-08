@@ -1,6 +1,16 @@
 # Changelog
 
 
+## [v0.0.2](https://github.com/soybeanjs/hono-ssr/compare/v0.0.1...v0.0.2) (2026-06-08)
+
+### &nbsp;&nbsp;&nbsp;🛠 Optimizations
+
+- **package**: move hono and tinyglobby to dependencies &nbsp;-&nbsp; by @soybeanjs [<samp>(15e16)</samp>](https://github.com/soybeanjs/hono-ssr/commit/15e16fc)
+
+### &nbsp;&nbsp;&nbsp;❤️ Contributors
+
+[![soybeanjs](https://github.com/soybeanjs.png?size=48)](https://github.com/soybeanjs)&nbsp;&nbsp;
+
 ## [v0.0.1](https://github.com/soybeanjs/hono-ssr/compare/v0.0.1...main) (2026-06-08)
 
 ### &nbsp;&nbsp;&nbsp;🚀 Features

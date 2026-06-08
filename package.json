@@ -1,6 +1,20 @@
 {
   "name": "@soybeanjs/hono-ssr",
   "version": "0.0.0",
+  "description": "A Vite SSR plugin for Hono framework, providing file-based routing, client build, SSR manifest management, and multi-platform deployment adaptation.",
+  "homepage": "https://github.com/soybeanjs/hono-ssr",
+  "bugs": {
+    "url": "https://github.com/soybeanjs/hono-ssr/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Soybean",
+    "email": "soybeanjs@outlook.com",
+    "url": "https://github.com/soybeanjs"
+  },
+  "repository": {
+    "url": "https://github.com/soybeanjs/hono-ssr.git"
+  },
   "files": [
     "dist"
   ],
@@ -47,7 +61,7 @@
     "@soybeanjs/cli": "^1.7.2",
     "@soybeanjs/oxc-config": "^0.2.3",
     "@types/node": "^25.9.2",
-    "hono": "^4.12.23",
+    "hono": "^4.12.24",
     "tinyglobby": "^0.2.17",
     "typescript": "^6.0.3",
     "vite": "catalog:",

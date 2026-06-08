@@ -9,7 +9,8 @@ overrides:
   oxlint: '1.68.0'
 minimumReleaseAgeExclude:
   - '@soybeanjs/oxc-config@0.2.3'
+  - hono@4.12.24
 allowBuilds:
-  esbuild: set this to true or false
-  sharp: set this to true or false
-  workerd: set this to true or false
+  esbuild: false
+  sharp: false
+  workerd: false

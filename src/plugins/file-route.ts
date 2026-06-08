@@ -26,6 +26,28 @@ export function FileRoutesPlugin(options?: HonoSSRFileRouteOptions): Plugin {
 
   return {
     name: 'hono-ssr:file-routes',
+    config(userConfig) {
+      // Ensure @soybeanjs/hono-ssr is processed by Vite's SSR pipeline so that
+      // the virtual:hono-file-routes import inside the package can be resolved.
+      const existing = userConfig.ssr?.noExternal;
+      if (existing === true) {
+        return;
+      }
+      const packageName = '@soybeanjs/hono-ssr';
+      const currentList = Array.isArray(existing)
+        ? existing
+        : existing
+          ? [existing]
+          : [];
+      if (currentList.includes(packageName)) {
+        return;
+      }
+      return {
+        ssr: {
+          noExternal: [...currentList, packageName]
+        }
+      };
+    },
     configResolved(resolvedConfig) {
       config = resolvedConfig;
     },

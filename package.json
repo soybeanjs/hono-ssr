@@ -65,7 +65,9 @@
     "@soybeanjs/cli": "^1.7.2",
     "@soybeanjs/oxc-config": "^0.2.3",
     "@types/node": "^25.9.2",
+    "hono-openapi": "^1.3.0",
     "typescript": "^6.0.3",
+    "valibot": "^1.4.1",
     "vite": "catalog:",
     "vite-plus": "catalog:",
     "wrangler": "^4.98.0"

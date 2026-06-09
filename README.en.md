@@ -114,23 +114,14 @@ import { z } from 'zod';
 
 const defineRoute = createDefineRoute<{ Bindings: { DB: D1Database } }>();
 
-export const GET = defineRoute({
-  handlers: [
-    async c => {
-      const users = await c.env.DB.prepare('SELECT * FROM users').all();
-      return c.json(users.results);
-    }
-  ]
+export const GET = defineRoute(async c => {
+  const users = await c.env.DB.prepare('SELECT * FROM users').all();
+  return c.json(users.results);
 });
 
-export const POST = defineRoute({
-  handlers: [
-    zValidator('json', z.object({ name: z.string() })),
-    async c => {
-      const { name } = c.req.valid('json');
-      return c.json({ id: 1, name }, 201);
-    }
-  ]
+export const POST = defineRoute(zValidator('json', z.object({ name: z.string() })), async c => {
+  const { name } = c.req.valid('json');
+  return c.json({ id: 1, name }, 201);
 });
 ```
 
@@ -198,13 +189,10 @@ function setupFileRoutes<Meta = RouteMeta>(
 Creates a type-safe route definer.
 
 ```ts
-const defineRoute = createDefineRoute<{ Bindings: Env }>();
+const defineRoute = createDefineRoute<{ Bindings: Env }, { description?: string }>();
 
 // Supports 1–7 middleware/handler functions
-export const GET = defineRoute({
-  handlers: [middleware1, middleware2, handler],
-  meta: { description: 'Get user list' }
-});
+export const GET = defineRoute(middleware1, middleware2, handler).meta({ description: 'Get user list' });
 ```
 
 ### Virtual Modules

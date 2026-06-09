@@ -83,22 +83,19 @@ export interface ScannedRouteModule {
   scanDir: string;
 }
 
-export interface RouteDefinition<T, S extends Record<string, any> = Record<string, any>> {
-  handlers: T;
-  meta?: S;
+export interface RouteDefinition<Handler, Meta> {
+  handlers: Handler;
+  meta: Meta & ((update: Meta) => RouteDefinition<Handler, Meta>);
 }
 
 export interface DefineRouteInterface<
   E extends Env,
   P extends string,
-  S extends Record<string, any> = Record<string, any>
+  Meta extends Record<string, any> = Record<string, any>
 > {
   <I extends Input = {}, R extends HandlerResponse<any> = any, E2 extends Env = E>(
-    definition: RouteDefinition<H<E2, P, I, R>, S>
-  ): RouteDefinition<[H<E2, P, I, R>], S>;
-  <I extends Input = {}, R extends HandlerResponse<any> = any, E2 extends Env = E>(
-    definition: RouteDefinition<[H<E2, P, I, R>]>
-  ): RouteDefinition<[H<E2, P, I, R>]>;
+    handler1: H<E2, P, I, R>
+  ): RouteDefinition<[H<E2, P, I, R>], Meta>;
   <
     I extends Input = {},
     I2 extends Input = I,
@@ -107,8 +104,9 @@ export interface DefineRouteInterface<
     E2 extends Env = E,
     E3 extends Env = IntersectNonAnyTypes<[E, E2]>
   >(
-    definition: RouteDefinition<[H<E2, P, I, R>, H<E3, P, I2, R2>], S>
-  ): RouteDefinition<[H<E2, P, I, R>, H<E3, P, I2, R2>], S>;
+    handler1: H<E2, P, I, R>,
+    handler2: H<E3, P, I2, R2>
+  ): RouteDefinition<[H<E2, P, I, R>, H<E3, P, I2, R2>], Meta>;
   <
     I extends Input = {},
     I2 extends Input = I,
@@ -120,8 +118,10 @@ export interface DefineRouteInterface<
     E3 extends Env = IntersectNonAnyTypes<[E, E2]>,
     E4 extends Env = IntersectNonAnyTypes<[E, E2, E3]>
   >(
-    definition: RouteDefinition<[H<E2, P, I, R>, H<E3, P, I2, R2>, H<E4, P, I3, R3>], S>
-  ): RouteDefinition<[H<E2, P, I, R>, H<E3, P, I2, R2>, H<E4, P, I3, R3>], S>;
+    handler1: H<E2, P, I, R>,
+    handler2: H<E3, P, I2, R2>,
+    handler3: H<E4, P, I3, R3>
+  ): RouteDefinition<[H<E2, P, I, R>, H<E3, P, I2, R2>, H<E4, P, I3, R3>], Meta>;
   <
     I extends Input = {},
     I2 extends Input = I,
@@ -136,8 +136,11 @@ export interface DefineRouteInterface<
     E4 extends Env = IntersectNonAnyTypes<[E, E2, E3]>,
     E5 extends Env = IntersectNonAnyTypes<[E, E2, E3, E4]>
   >(
-    definition: RouteDefinition<[H<E2, P, I, R>, H<E3, P, I2, R2>, H<E4, P, I3, R3>, H<E5, P, I4, R4>], S>
-  ): RouteDefinition<[H<E2, P, I, R>, H<E3, P, I2, R2>, H<E4, P, I3, R3>, H<E5, P, I4, R4>], S>;
+    handler1: H<E2, P, I, R>,
+    handler2: H<E3, P, I2, R2>,
+    handler3: H<E4, P, I3, R3>,
+    handler4: H<E5, P, I4, R4>
+  ): RouteDefinition<[H<E2, P, I, R>, H<E3, P, I2, R2>, H<E4, P, I3, R3>, H<E5, P, I4, R4>], Meta>;
   <
     I extends Input = {},
     I2 extends Input = I,
@@ -155,11 +158,12 @@ export interface DefineRouteInterface<
     E5 extends Env = IntersectNonAnyTypes<[E, E2, E3, E4]>,
     E6 extends Env = IntersectNonAnyTypes<[E, E2, E3, E4, E5]>
   >(
-    definition: RouteDefinition<
-      [H<E2, P, I, R>, H<E3, P, I2, R2>, H<E4, P, I3, R3>, H<E5, P, I4, R4>, H<E6, P, I5, R5>],
-      S
-    >
-  ): RouteDefinition<[H<E2, P, I, R>, H<E3, P, I2, R2>, H<E4, P, I3, R3>, H<E5, P, I4, R4>, H<E6, P, I5, R5>], S>;
+    handler1: H<E2, P, I, R>,
+    handler2: H<E3, P, I2, R2>,
+    handler3: H<E4, P, I3, R3>,
+    handler4: H<E5, P, I4, R4>,
+    handler5: H<E6, P, I5, R5>
+  ): RouteDefinition<[H<E2, P, I, R>, H<E3, P, I2, R2>, H<E4, P, I3, R3>, H<E5, P, I4, R4>, H<E6, P, I5, R5>], Meta>;
   <
     I extends Input = {},
     I2 extends Input = I,
@@ -180,13 +184,15 @@ export interface DefineRouteInterface<
     E6 extends Env = IntersectNonAnyTypes<[E, E2, E3, E4, E5]>,
     E7 extends Env = IntersectNonAnyTypes<[E, E2, E3, E4, E5, E6]>
   >(
-    definition: RouteDefinition<
-      [H<E2, P, I, R>, H<E3, P, I2, R2>, H<E4, P, I3, R3>, H<E5, P, I4, R4>, H<E6, P, I5, R5>, H<E7, P, I6, R6>],
-      S
-    >
+    handler1: H<E2, P, I, R>,
+    handler2: H<E3, P, I2, R2>,
+    handler3: H<E4, P, I3, R3>,
+    handler4: H<E5, P, I4, R4>,
+    handler5: H<E6, P, I5, R5>,
+    handler6: H<E7, P, I6, R6>
   ): RouteDefinition<
     [H<E2, P, I, R>, H<E3, P, I2, R2>, H<E4, P, I3, R3>, H<E5, P, I4, R4>, H<E6, P, I5, R5>, H<E7, P, I6, R6>],
-    S
+    Meta
   >;
   <
     I extends Input = {},
@@ -211,30 +217,14 @@ export interface DefineRouteInterface<
     E7 extends Env = IntersectNonAnyTypes<[E, E2, E3, E4, E5, E6]>,
     E8 extends Env = IntersectNonAnyTypes<[E, E2, E3, E4, E5, E6, E7]>
   >(
-    definition: RouteDefinition<
-      [
-        H<E2, P, I, R>,
-        H<E3, P, I2, R2>,
-        H<E4, P, I3, R3>,
-        H<E5, P, I4, R4>,
-        H<E6, P, I5, R5>,
-        H<E7, P, I6, R6>,
-        H<E8, P, I7, R7>
-      ],
-      S
-    >
-  ): RouteDefinition<
-    [
-      H<E2, P, I, R>,
-      H<E3, P, I2, R2>,
-      H<E4, P, I3, R3>,
-      H<E5, P, I4, R4>,
-      H<E6, P, I5, R5>,
-      H<E7, P, I6, R6>,
-      H<E8, P, I7, R7>
-    ],
-    S
-  >;
+    handler1: H<E2, P, I, R>,
+    handler2: H<E3, P, I2, R2>,
+    handler3: H<E4, P, I3, R3>,
+    handler4: H<E5, P, I4, R4>,
+    handler5: H<E6, P, I5, R5>,
+    handler6: H<E7, P, I6, R6>,
+    handler7: H<E8, P, I7, R7>
+  ): RouteDefinition<[H<E2, P, I, R>, H<E3, P, I2, R2>, H<E4, P, I3, R3>, H<E5, P, I4, R4>, H<E6, P, I5, R5>], Meta>;
   <
     I extends Input = {},
     I2 extends Input = I,
@@ -261,19 +251,14 @@ export interface DefineRouteInterface<
     E8 extends Env = IntersectNonAnyTypes<[E, E2, E3, E4, E5, E6, E7]>,
     E9 extends Env = IntersectNonAnyTypes<[E, E2, E3, E4, E5, E6, E7, E8]>
   >(
-    definition: RouteDefinition<
-      [
-        H<E2, P, I, R>,
-        H<E3, P, I2, R2>,
-        H<E4, P, I3, R3>,
-        H<E5, P, I4, R4>,
-        H<E6, P, I5, R5>,
-        H<E7, P, I6, R6>,
-        H<E8, P, I7, R7>,
-        H<E9, P, I8, R8>
-      ],
-      S
-    >
+    handler1: H<E2, P, I, R>,
+    handler2: H<E3, P, I2, R2>,
+    handler3: H<E4, P, I3, R3>,
+    handler4: H<E5, P, I4, R4>,
+    handler5: H<E6, P, I5, R5>,
+    handler6: H<E7, P, I6, R6>,
+    handler7: H<E8, P, I7, R7>,
+    handler8: H<E9, P, I8, R8>
   ): RouteDefinition<
     [
       H<E2, P, I, R>,
@@ -285,7 +270,7 @@ export interface DefineRouteInterface<
       H<E8, P, I7, R7>,
       H<E9, P, I8, R8>
     ],
-    S
+    Meta
   >;
   <
     I extends Input = {},
@@ -316,20 +301,15 @@ export interface DefineRouteInterface<
     E9 extends Env = IntersectNonAnyTypes<[E, E2, E3, E4, E5, E6, E7, E8]>,
     E10 extends Env = IntersectNonAnyTypes<[E, E2, E3, E4, E5, E6, E7, E8, E9]>
   >(
-    definition: RouteDefinition<
-      [
-        H<E2, P, I, R>,
-        H<E3, P, I2, R2>,
-        H<E4, P, I3, R3>,
-        H<E5, P, I4, R4>,
-        H<E6, P, I5, R5>,
-        H<E7, P, I6, R6>,
-        H<E8, P, I7, R7>,
-        H<E9, P, I8, R8>,
-        H<E10, P, I9, R9>
-      ],
-      S
-    >
+    handler1: H<E2, P, I, R>,
+    handler2: H<E3, P, I2, R2>,
+    handler3: H<E4, P, I3, R3>,
+    handler4: H<E5, P, I4, R4>,
+    handler5: H<E6, P, I5, R5>,
+    handler6: H<E7, P, I6, R6>,
+    handler7: H<E8, P, I7, R7>,
+    handler8: H<E9, P, I8, R8>,
+    handler9: H<E10, P, I9, R9>
   ): RouteDefinition<
     [
       H<E2, P, I, R>,
@@ -342,7 +322,7 @@ export interface DefineRouteInterface<
       H<E9, P, I8, R8>,
       H<E10, P, I9, R9>
     ],
-    S
+    Meta
   >;
   <
     I extends Input = {},
@@ -376,21 +356,16 @@ export interface DefineRouteInterface<
     E10 extends Env = IntersectNonAnyTypes<[E, E2, E3, E4, E5, E6, E7, E8, E9]>,
     E11 extends Env = IntersectNonAnyTypes<[E, E2, E3, E4, E5, E6, E7, E8, E9, E10]>
   >(
-    definition: RouteDefinition<
-      [
-        H<E2, P, I, R>,
-        H<E3, P, I2, R2>,
-        H<E4, P, I3, R3>,
-        H<E5, P, I4, R4>,
-        H<E6, P, I5, R5>,
-        H<E7, P, I6, R6>,
-        H<E8, P, I7, R7>,
-        H<E9, P, I8, R8>,
-        H<E10, P, I9, R9>,
-        H<E11, P, I10, R10>
-      ],
-      S
-    >
+    handler1: H<E2, P, I, R>,
+    handler2: H<E3, P, I2, R2>,
+    handler3: H<E4, P, I3, R3>,
+    handler4: H<E5, P, I4, R4>,
+    handler5: H<E6, P, I5, R5>,
+    handler6: H<E7, P, I6, R6>,
+    handler7: H<E8, P, I7, R7>,
+    handler8: H<E9, P, I8, R8>,
+    handler9: H<E10, P, I9, R9>,
+    handler10: H<E11, P, I10, R10>
   ): RouteDefinition<
     [
       H<E2, P, I, R>,
@@ -404,6 +379,6 @@ export interface DefineRouteInterface<
       H<E10, P, I9, R9>,
       H<E11, P, I10, R10>
     ],
-    S
+    Meta
   >;
 }

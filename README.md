@@ -114,24 +114,15 @@ import { z } from 'zod';
 
 const defineRoute = createDefineRoute<{ Bindings: { DB: D1Database } }>();
 
-export const GET = defineRoute({
-  handlers: [
-    async c => {
-      const users = await c.env.DB.prepare('SELECT * FROM users').all();
-      return c.json(users.results);
-    }
-  ]
+export const GET = defineRoute(async c => {
+  const users = await c.env.DB.prepare('SELECT * FROM users').all();
+  return c.json(users.results);
 });
 
-export const POST = defineRoute({
-  handlers: [
-    zValidator('json', z.object({ name: z.string() })),
-    async c => {
-      const { name } = c.req.valid('json');
-      // ... 创建用户
-      return c.json({ id: 1, name }, 201);
-    }
-  ]
+export const POST = defineRoute(zValidator('json', z.object({ name: z.string() })), async c => {
+  const { name } = c.req.valid('json');
+  // ... 创建用户
+  return c.json({ id: 1, name }, 201);
 });
 ```
 
@@ -199,13 +190,10 @@ function setupFileRoutes<Meta = RouteMeta>(
 创建类型安全的路由定义器。
 
 ```ts
-const defineRoute = createDefineRoute<{ Bindings: Env }>();
+const defineRoute = createDefineRoute<{ Bindings: Env }, { description?: string }>();
 
 // 支持 1–7 个中间件处理函数
-export const GET = defineRoute({
-  handlers: [middleware1, middleware2, handler],
-  meta: { description: 'Get user list' }
-});
+export const GET = defineRoute(middleware1, middleware2, handler).meta({ description: '获取用户列表' });
 ```
 
 #### 虚拟模块

@@ -1,6 +1,16 @@
 # Changelog
 
 
+## [v0.0.4](https://github.com/soybeanjs/hono-ssr/compare/v0.0.3...v0.0.4) (2026-06-09)
+
+### &nbsp;&nbsp;&nbsp;🚀 Features
+
+- **route**: enhance route definition with meta update function &nbsp;-&nbsp; by @soybeanjs [<samp>(343e9)</samp>](https://github.com/soybeanjs/hono-ssr/commit/343e9dc)
+
+### &nbsp;&nbsp;&nbsp;❤️ Contributors
+
+[![soybeanjs](https://github.com/soybeanjs.png?size=48)](https://github.com/soybeanjs)&nbsp;&nbsp;
+
 ## [v0.0.3](https://github.com/soybeanjs/hono-ssr/compare/v0.0.2...v0.0.3) (2026-06-08)
 
 ### &nbsp;&nbsp;&nbsp;🚀 Features

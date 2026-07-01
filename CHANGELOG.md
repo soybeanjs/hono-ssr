@@ -1,6 +1,17 @@
 # Changelog
 
 
+## [v0.0.5](https://github.com/soybeanjs/hono-ssr/compare/v0.0.4...v0.0.5) (2026-07-01)
+
+### &nbsp;&nbsp;&nbsp;🚀 Features
+
+- **plugins**: add entry file validation for client and server in HonoSSR &nbsp;-&nbsp; by @soybeanjs [<samp>(dc149)</samp>](https://github.com/soybeanjs/hono-ssr/commit/dc14994)
+- **types**: update HonoSSRPluginOptions to use platform type and adjust related logic &nbsp;-&nbsp; by @soybeanjs [<samp>(ffbba)</samp>](https://github.com/soybeanjs/hono-ssr/commit/ffbba78)
+
+### &nbsp;&nbsp;&nbsp;❤️ Contributors
+
+[![soybeanjs](https://github.com/soybeanjs.png?size=48)](https://github.com/soybeanjs)&nbsp;&nbsp;
+
 ## [v0.0.4](https://github.com/soybeanjs/hono-ssr/compare/v0.0.3...v0.0.4) (2026-06-09)
 
 ### &nbsp;&nbsp;&nbsp;🚀 Features

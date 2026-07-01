@@ -1,3 +1,5 @@
+import { access } from 'node:fs/promises';
+import path from 'node:path';
 import type { Plugin } from 'vite';
 import DevServer, { defaultOptions } from '@hono/vite-dev-server';
 import type { Adapter } from '@hono/vite-dev-server/types';
@@ -43,6 +45,7 @@ export async function HonoSSR<T extends HonoSSRPlatform = HonoSSRPlatform>(optio
   }
 
   const plugins: Plugin[] = [
+    ValidateServerEntry(serverEntry),
     FileRoutesPlugin(fileRoute),
     ManifestPlugin(clientEntry),
     DevServer({
@@ -66,4 +69,24 @@ export async function HonoSSR<T extends HonoSSRPlatform = HonoSSRPlatform>(optio
   }
 
   return plugins;
+}
+
+function resolveEntryPath(root: string, entry: string) {
+  return path.resolve(root, entry);
+}
+
+function ValidateServerEntry(serverEntry: string): Plugin {
+  return {
+    name: 'hono-ssr:validate-server-entry',
+    enforce: 'pre',
+    async configResolved(config) {
+      const serverEntryPath = resolveEntryPath(config.root, serverEntry);
+
+      try {
+        await access(serverEntryPath);
+      } catch {
+        throw new Error(`[hono-ssr] serverEntry "${serverEntry}" was not found: ${serverEntryPath}`);
+      }
+    }
+  };
 }

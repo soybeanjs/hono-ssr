@@ -1,9 +1,18 @@
-import { readFile } from 'node:fs/promises';
+import { access, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { Plugin, ResolvedConfig } from 'vite';
 
 const VIRTUAL_MANIFEST_ID = 'virtual:hono-ssr-manifest';
 const RESOLVED_VIRTUAL_MANIFEST_ID = `\0${VIRTUAL_MANIFEST_ID}`;
+
+async function hasEntryFile(root: string | undefined, entry: string) {
+  try {
+    await access(path.resolve(root ?? '', entry));
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 export function ClientBuild(clientEntry: string): Plugin {
   return {
@@ -14,7 +23,11 @@ export function ClientBuild(clientEntry: string): Plugin {
       }
       return false;
     },
-    config: () => {
+    config: async config => {
+      if (!(await hasEntryFile(config.root, clientEntry))) {
+        return undefined;
+      }
+
       return {
         build: {
           rolldownOptions: {
@@ -35,11 +48,13 @@ export function ClientBuild(clientEntry: string): Plugin {
  */
 export function ManifestPlugin(clientEntry: string): Plugin {
   let config: ResolvedConfig;
+  let clientEntryExists = true;
 
   return {
     name: 'hono-ssr:manifest',
-    configResolved(resolvedConfig) {
+    async configResolved(resolvedConfig) {
       config = resolvedConfig;
+      clientEntryExists = await hasEntryFile(config.root, clientEntry);
     },
     resolveId(id) {
       if (id === VIRTUAL_MANIFEST_ID) {
@@ -50,6 +65,16 @@ export function ManifestPlugin(clientEntry: string): Plugin {
     async load(id) {
       if (id !== RESOLVED_VIRTUAL_MANIFEST_ID) {
         return null;
+      }
+
+      if (!clientEntryExists) {
+        return [
+          `export function resolveManifest() {`,
+          `  return { scripts: '', styles: '' };`,
+          `}`,
+          '',
+          `export default {};`
+        ].join('\n');
       }
 
       // 开发环境：直接使用 clientEntry 生成 script 标签

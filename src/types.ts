@@ -13,7 +13,7 @@ import type { GetPlatformProxyOptions } from 'wrangler';
 /**
  * HonoSSRPluginOptions defines the options for the Hono SSR plugin.
  */
-export interface HonoSSRPluginOptions<T extends HonoSSRBuildType = HonoSSRBuildType> {
+export interface HonoSSRPluginOptions<T extends HonoSSRPlatform = HonoSSRPlatform> {
   /**
    * @default 'server/app.ts'
    */
@@ -34,7 +34,19 @@ export interface HonoSSRPluginOptions<T extends HonoSSRBuildType = HonoSSRBuildT
    * @default true
    */
   enableDevServerAdapter?: boolean;
-  buildType?: T;
+  /**
+   * platform specifies the platform for the Hono SSR plugin. It can be one of the following:
+   * - 'node'
+   * - 'bun'
+   * - 'deno'
+   * - 'cloudflare-workers'
+   * - 'cloudflare-pages'
+   * - 'vercel'
+   * - 'netlify-functions'
+   *
+   * @default undefined
+   */
+  platform?: T;
   buildOptions?: HonoSSRBuildRecord[T];
   /**
    * platformProxyOptions is the options for the platform proxy in development mode.
@@ -54,7 +66,7 @@ export type HonoSSRBuildRecord = {
   'netlify-functions'?: NetlifyFunctionsBuildOptions;
 };
 
-export type HonoSSRBuildType = keyof HonoSSRBuildRecord;
+export type HonoSSRPlatform = keyof HonoSSRBuildRecord;
 
 /**
  * HonoSSRFileRouteOptions defines the options for file-based routing api in Hono SSR.

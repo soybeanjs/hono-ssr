@@ -1,6 +1,16 @@
 # Changelog
 
 
+## [v0.0.6](https://github.com/soybeanjs/hono-ssr/compare/v0.0.5...v0.0.6) (2026-07-04)
+
+### &nbsp;&nbsp;&nbsp;🏡 Chore
+
+- **deps**: update deps &nbsp;-&nbsp; by @soybeanjs [<samp>(0615b)</samp>](https://github.com/soybeanjs/hono-ssr/commit/0615b40)
+
+### &nbsp;&nbsp;&nbsp;❤️ Contributors
+
+[![soybeanjs](https://github.com/soybeanjs.png?size=48)](https://github.com/soybeanjs)&nbsp;&nbsp;
+
 ## [v0.0.5](https://github.com/soybeanjs/hono-ssr/compare/v0.0.4...v0.0.5) (2026-07-01)
 
 ### &nbsp;&nbsp;&nbsp;🚀 Features

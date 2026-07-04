@@ -1,16 +1,13 @@
 shamefullyHoist: true
 catalog:
-  vite: npm:@voidzero-dev/vite-plus-core@^0.1.24
+  vite: npm:@voidzero-dev/vite-plus-core@latest
   vitest: npm:@voidzero-dev/vite-plus-test@latest
-  vite-plus: ^0.1.24
+  vite-plus: ^0.2.2
 overrides:
   vite: 'catalog:'
   vitest: 'catalog:'
-  oxlint: '1.68.0'
-minimumReleaseAgeExclude:
-  - '@soybeanjs/oxc-config@0.2.3'
-  - hono@4.12.24
 allowBuilds:
   esbuild: false
   sharp: false
   workerd: false
+minimumReleaseAgeExclude:

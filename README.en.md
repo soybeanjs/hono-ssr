@@ -51,7 +51,7 @@ export default defineConfig({
     HonoSSR({
       serverEntry: 'server/app.ts',
       clientEntry: 'app/entry-client.ts',
-      buildType: 'cloudflare-workers'
+      platform: 'cloudflare-workers'
     })
   ]
 });
@@ -153,24 +153,61 @@ app.mount('#app');
 Vite plugin factory.
 
 ```ts
-interface HonoSSRPluginOptions<T extends HonoSSRBuildType = HonoSSRBuildType> {
+interface HonoSSRPluginOptions<T extends HonoSSRPlatform = HonoSSRPlatform> {
   /** Server entry file @default 'server/app.ts' */
   serverEntry?: string;
   /** Client entry file @default 'app/entry-client.ts' */
   clientEntry?: string;
   /** File-based routing options */
   fileRoute?: HonoSSRFileRouteOptions;
-  /** @hono/vite-dev-server options */
-  devServer?: DevServerOptions;
+  /** @hono/vite-dev-server options plus a startup hook */
+  devServer?: HonoSSRDevServerOptions<T>;
   /** Dev server exclude patterns @default [/^\/app\/.+/] */
   devServerExclude?: (string | RegExp)[];
   /** Deployment target */
-  buildType?: 'cloudflare-workers' | 'cloudflare-pages' | 'node' | 'bun' | 'deno' | 'vercel' | 'netlify-functions';
+  platform?: 'cloudflare-workers' | 'cloudflare-pages' | 'node' | 'bun' | 'deno' | 'vercel' | 'netlify-functions';
   /** Build options forwarded to @hono/vite-build */
   buildOptions?: NodeBuildOptions | BunBuildOptions | CloudflareWorkersBuildOptions | ...;
   /** Cloudflare Platform Proxy options (simulate bindings in dev) */
   platformProxyOptions?: GetPlatformProxyOptions;
 }
+
+interface HonoSSRDevServerOptions<T extends HonoSSRPlatform = HonoSSRPlatform> extends DevServerOptions {
+  onServerStart?: (context: HonoSSRDevServerStartContext<T>) => void | Promise<void>;
+}
+```
+
+### `devServer.onServerStart(context)`
+
+Runs after the Vite dev server starts listening. Use it for custom logs, startup reporting, or printing local and LAN URLs. `context.resolvedUrls` matches Vite's resolved URL list:
+
+- `context.resolvedUrls?.local`: local URLs
+- `context.resolvedUrls?.network`: network URLs
+
+```ts
+import { defineConfig } from 'vite';
+import { HonoSSR } from '@soybeanjs/hono-ssr/vite';
+
+export default defineConfig(async () => ({
+  plugins: [
+    await HonoSSR({
+      platform: 'node',
+      devServer: {
+        onServerStart({ resolvedUrls, platform }) {
+          console.log(`[hono-ssr] ${platform ?? 'unknown'} dev server ready`);
+
+          for (const url of resolvedUrls?.local ?? []) {
+            console.log(`  local: ${url}`);
+          }
+
+          for (const url of resolvedUrls?.network ?? []) {
+            console.log(`  network: ${url}`);
+          }
+        }
+      }
+    })
+  ]
+}));
 ```
 
 ### `setupFileRoutes(options?, onRouteRegister?)`

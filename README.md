@@ -51,7 +51,7 @@ export default defineConfig({
     HonoSSR({
       serverEntry: 'server/app.ts', // 服务端入口（默认）
       clientEntry: 'app/entry-client.ts', // 客户端入口（默认）
-      buildType: 'cloudflare-workers' // 部署目标
+      platform: 'cloudflare-workers' // 部署目标
     })
   ]
 });
@@ -154,24 +154,61 @@ app.mount('#app');
 Vite 插件工厂函数。
 
 ```ts
-interface HonoSSRPluginOptions<T extends HonoSSRBuildType = HonoSSRBuildType> {
+interface HonoSSRPluginOptions<T extends HonoSSRPlatform = HonoSSRPlatform> {
   /** 服务端入口文件 @default 'server/app.ts' */
   serverEntry?: string;
   /** 客户端入口文件 @default 'app/entry-client.ts' */
   clientEntry?: string;
   /** 文件路由配置 */
   fileRoute?: HonoSSRFileRouteOptions;
-  /** @hono/vite-dev-server 的配置 */
-  devServer?: DevServerOptions;
+  /** @hono/vite-dev-server 的配置，额外支持启动钩子 */
+  devServer?: HonoSSRDevServerOptions<T>;
   /** Dev Server 排除模式 @default [/^\/app\/.+/] */
   devServerExclude?: (string | RegExp)[];
   /** 部署目标 */
-  buildType?: 'cloudflare-workers' | 'cloudflare-pages' | 'node' | 'bun' | 'deno' | 'vercel' | 'netlify-functions';
+  platform?: 'cloudflare-workers' | 'cloudflare-pages' | 'node' | 'bun' | 'deno' | 'vercel' | 'netlify-functions';
   /** 传递给 @hono/vite-build 的构建配置 */
   buildOptions?: NodeBuildOptions | BunBuildOptions | CloudflareWorkersBuildOptions | ...;
   /** Cloudflare Platform Proxy 配置（开发模式模拟绑定） */
   platformProxyOptions?: GetPlatformProxyOptions;
 }
+
+interface HonoSSRDevServerOptions<T extends HonoSSRPlatform = HonoSSRPlatform> extends DevServerOptions {
+  onServerStart?: (context: HonoSSRDevServerStartContext<T>) => void | Promise<void>;
+}
+```
+
+#### `devServer.onServerStart(context)`
+
+在 Vite Dev Server 开始监听后触发，可用于打印自定义日志、上报启动事件，或暴露本地 / 局域网访问地址。`context.resolvedUrls` 对应 Vite 已解析好的地址列表：
+
+- `context.resolvedUrls?.local`：本地访问地址
+- `context.resolvedUrls?.network`：局域网访问地址
+
+```ts
+import { defineConfig } from 'vite';
+import { HonoSSR } from '@soybeanjs/hono-ssr/vite';
+
+export default defineConfig(async () => ({
+  plugins: [
+    await HonoSSR({
+      platform: 'node',
+      devServer: {
+        onServerStart({ resolvedUrls, platform }) {
+          console.log(`[hono-ssr] ${platform ?? 'unknown'} dev server ready`);
+
+          for (const url of resolvedUrls?.local ?? []) {
+            console.log(`  local: ${url}`);
+          }
+
+          for (const url of resolvedUrls?.network ?? []) {
+            console.log(`  network: ${url}`);
+          }
+        }
+      }
+    })
+  ]
+}));
 ```
 
 #### `setupFileRoutes(options?, onRouteRegister?)`

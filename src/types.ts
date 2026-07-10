@@ -1,3 +1,4 @@
+import type { ResolvedServerUrls, ViteDevServer } from 'vite';
 import type { BunBuildOptions } from '@hono/vite-build/bun';
 import type { CloudflarePagesBuildOptions } from '@hono/vite-build/cloudflare-pages';
 import type { CloudflareWorkersBuildOptions } from '@hono/vite-build/cloudflare-workers';
@@ -23,7 +24,7 @@ export interface HonoSSRPluginOptions<T extends HonoSSRPlatform = HonoSSRPlatfor
    */
   clientEntry?: string;
   fileRoute?: HonoSSRFileRouteOptions;
-  devServer?: DevServerOptions;
+  devServer?: HonoSSRDevServerOptions<T>;
   /**
    * @default "[/^\/app\/.+/]"
    */
@@ -89,6 +90,17 @@ export interface HonoSSRFileRouteOptions {
 export type HonoAdapterFactory = () => Promise<Adapter> | Adapter;
 
 export type Awaitable<T> = T | Promise<T>;
+
+export interface HonoSSRDevServerStartContext<T extends HonoSSRPlatform = HonoSSRPlatform> {
+  server: ViteDevServer;
+  resolvedUrls: ResolvedServerUrls | null;
+  serverEntry: string;
+  platform?: T;
+}
+
+export interface HonoSSRDevServerOptions<T extends HonoSSRPlatform = HonoSSRPlatform> extends DevServerOptions {
+  onServerStart?: (context: HonoSSRDevServerStartContext<T>) => Awaitable<void>;
+}
 
 export interface ScannedRouteModule {
   source: string;

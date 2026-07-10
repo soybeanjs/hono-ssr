@@ -6,7 +6,7 @@ import type { Adapter } from '@hono/vite-dev-server/types';
 import { interopDefault } from './shared';
 import { ClientBuild, ManifestPlugin } from './plugins/client';
 import { FileRoutesPlugin } from './plugins/file-route';
-import type { HonoSSRPluginOptions, HonoSSRPlatform, HonoAdapterFactory } from './types';
+import type { HonoSSRDevServerOptions, HonoSSRPluginOptions, HonoSSRPlatform, HonoAdapterFactory } from './types';
 
 export async function HonoSSR<T extends HonoSSRPlatform = HonoSSRPlatform>(options: HonoSSRPluginOptions<T>) {
   const {
@@ -19,6 +19,7 @@ export async function HonoSSR<T extends HonoSSRPlatform = HonoSSRPlatform>(optio
     buildOptions,
     platformProxyOptions = {}
   } = options;
+  const { onServerStart, ...resolvedDevServerOptions } = devServer ?? {};
 
   const HonoBuild = platform
     ? await interopDefault<(options: any) => Plugin>(import(`@hono/vite-build/${platform}`))
@@ -53,8 +54,13 @@ export async function HonoSSR<T extends HonoSSRPlatform = HonoSSRPlatform>(optio
       entry: serverEntry,
       injectClientScript: false,
       adapter: getHonoAdapter,
-      ...devServer,
-      exclude: [...defaultOptions.exclude, ...(devServerExclude ?? []), ...(devServer?.exclude ?? [])]
+      ...resolvedDevServerOptions,
+      exclude: [...defaultOptions.exclude, ...(devServerExclude ?? []), ...(resolvedDevServerOptions.exclude ?? [])]
+    }),
+    DevServerStartPlugin({
+      serverEntry,
+      platform,
+      onServerStart
     }),
     ClientBuild(clientEntry)
   ];
@@ -73,6 +79,47 @@ export async function HonoSSR<T extends HonoSSRPlatform = HonoSSRPlatform>(optio
 
 function resolveEntryPath(root: string, entry: string) {
   return path.resolve(root, entry);
+}
+
+function DevServerStartPlugin<T extends HonoSSRPlatform = HonoSSRPlatform>(options: {
+  serverEntry: string;
+  platform?: T;
+  onServerStart?: HonoSSRDevServerOptions<T>['onServerStart'];
+}): Plugin {
+  return {
+    name: 'hono-ssr:dev-server-start',
+    configureServer(server) {
+      if (!options.onServerStart) {
+        return;
+      }
+
+      let called = false;
+
+      const invoke = () => {
+        if (called) {
+          return;
+        }
+
+        called = true;
+
+        queueMicrotask(() => {
+          void options.onServerStart?.({
+            server,
+            resolvedUrls: server.resolvedUrls,
+            serverEntry: options.serverEntry,
+            platform: options.platform
+          });
+        });
+      };
+
+      if (server.httpServer?.listening) {
+        invoke();
+        return;
+      }
+
+      server.httpServer?.once('listening', invoke);
+    }
+  };
 }
 
 function ValidateServerEntry(serverEntry: string): Plugin {

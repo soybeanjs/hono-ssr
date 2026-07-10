@@ -1,6 +1,16 @@
 # Changelog
 
 
+## [v0.0.8](https://github.com/soybeanjs/hono-ssr/compare/v0.0.7...v0.0.8) (2026-07-10)
+
+### &nbsp;&nbsp;&nbsp;🚀 Features
+
+- **types**: update HonoSSRPluginOptions to use platform and enhance devServer options &nbsp;-&nbsp; by @soybeanjs [<samp>(bb43b)</samp>](https://github.com/soybeanjs/hono-ssr/commit/bb43bc5)
+
+### &nbsp;&nbsp;&nbsp;❤️ Contributors
+
+[![soybeanjs](https://github.com/soybeanjs.png?size=48)](https://github.com/soybeanjs)&nbsp;&nbsp;
+
 ## [v0.0.7](https://github.com/soybeanjs/hono-ssr/compare/v0.0.6...v0.0.7) (2026-07-06)
 
 ### &nbsp;&nbsp;&nbsp;🚀 Features
